@@ -17,10 +17,12 @@ class Transaction:
 
         self.notes = get_prefix_dict(notes)
 
-    def withdraw(self, amount):
+    def withdraw(self, amount, balance):
         self.withdraw_amount = amount
         if amount > self.balance:
-            return False, {}, 'Not Enough Amount'
+            return False, {}, 'Not Enough Amount in atm'
+        if amount > balance:
+            return False, {}, 'Not enough balance in your account'
         data = {}
         for item in self.notes.items():
 

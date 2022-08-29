@@ -14,6 +14,9 @@ from apps.card_token.models import CardToken
 
 
 class CardView(APIView):
+    """
+    To retrieve Card Token
+    """
     permission_classes = ()
     authentication_classes = ()
 
@@ -25,6 +28,11 @@ class CardView(APIView):
 
 
 class TransactionView(viewsets.GenericViewSet):
+    """
+    transactions
+    After completing transaction token will be deleted,
+
+    """
     transaction_auth = CardAuthenticated()
 
     def intent_transaction(self, request, action):
@@ -57,7 +65,7 @@ class TransactionView(viewsets.GenericViewSet):
         if card_token.card.pin == request.POST.get('pin'):
             if atm_transaction.type == 'D':
                 success, data, message = Transaction(atm_transaction.atm.in_cash, atm_transaction.atm.balance).withdraw(
-                    atm_transaction.amount)
+                    atm_transaction.amount, atm_transaction.card.account.balance)
                 if success:
                     with transaction.atomic():
 
@@ -96,6 +104,8 @@ class TransactionView(viewsets.GenericViewSet):
                 in_atm_cash = atm.in_cash
                 for k, v in atm_transaction.in_cash.items():
                     in_atm_cash[k] = in_atm_cash[k] + v
+
+
                 atm.in_cash = in_atm_cash
                 atm.balance = atm.balance + atm_transaction.amount
                 atm.save()
