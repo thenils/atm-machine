@@ -1,0 +1,219 @@
+{
+	"info": {
+		"_postman_id": "dbbc2f09-9a9e-49f0-a115-f72750a910c4",
+		"name": "ATM Machine",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14767664"
+	},
+	"item": [
+		{
+			"name": "Make Transaction",
+			"item": [
+				{
+					"name": "Enter Card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json_data = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable('card_token', json_data.card_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "card_number",
+									"value": "123445677890",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/transaction/v1/card/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transaction",
+								"v1",
+								"card",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Withdraw",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json_data = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable('transaction_id', json_data.transaction_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Card-Token",
+								"value": "{{card_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/transaction/v1/card/withdraw/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transaction",
+								"v1",
+								"card",
+								"withdraw",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deposit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json_data = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable('transaction_id', json_data.transaction_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Card-Token",
+								"value": "{{card_token}}",
+								"type": "text"
+							},
+							{
+								"key": "ATM",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/transaction/v1/card/deposit/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transaction",
+								"v1",
+								"card",
+								"deposit",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enter Amount",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 1000,\n    \"in_cash_depo\": {\n        \"500\":2\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/transaction/v1/:transactionId/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transaction",
+								"v1",
+								":transactionId",
+								""
+							],
+							"variable": [
+								{
+									"key": "transactionId",
+									"value": "{{transaction_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Pin and make the transaction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Card-Token",
+								"value": "{{card_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "pin",
+									"value": "7572",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/transaction/v1/:transactionId/verify/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transaction",
+								"v1",
+								":transactionId",
+								"verify",
+								""
+							],
+							"variable": [
+								{
+									"key": "transactionId",
+									"value": "{{transaction_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
